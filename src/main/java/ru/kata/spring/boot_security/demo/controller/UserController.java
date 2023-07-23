@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -14,55 +15,38 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
+    }
+
+    @GetMapping(value = "/info")
+    public String printAllUsers(ModelMap model, Principal principal) {
+        model.addAttribute("user", principal.getName());
+        model.addAttribute("principal", SecurityContextHolder.getContext());
+        return "/user/user";
     }
 
     @GetMapping(value = "/")
-    public String printAllUsers(ModelMap model) {
-        model.addAttribute("users", userService.findAll());
-        return "read";
-    }
-
-    @GetMapping(value = "/new")
-    public String addUser(@ModelAttribute("user") User user) {
-        return "create";
-    }
-
-    @PostMapping(value = "/saveNew")
-    public String saveAddUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/users/";
+    public String printIndex(ModelMap model) {
+        return "index";
     }
 
 
-    @GetMapping(value = "/edit/{id}")
-    public String editUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.findOne(id));
-        return "update";
-    }
-
-    @PatchMapping("/saveEdit/{id}")
-    public String saveEditUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/users/";
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public String deleteUser(@ModelAttribute("user") User user) {
-        userService.delete(user);
-        return "redirect:/users/";
-    }
 
 
 }
