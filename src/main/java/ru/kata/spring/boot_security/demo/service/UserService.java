@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     Collection<User> findAll();
 
-    void delete(User user);
+    void delete(Long id);
 
     void save(User user);
 
