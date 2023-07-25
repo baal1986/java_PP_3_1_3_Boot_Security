@@ -16,8 +16,7 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
-
+public class AdminController implements Controllers {
 
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
