@@ -10,7 +10,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("user")
-public class UserController implements Controllers {
+public class UserController {
 
     @GetMapping("/user")
     public String showUserInfo(Model model, Principal principal) {
